@@ -7,6 +7,12 @@ import java.util.Map;
 import java.util.Random;
 
 public class GameEngine {
+	private static final int NULL_COMBINATION = -1;
+	private static final int COMBINATIONS_PARTS_COUNT = 3;
+	private static final int COMBINATIONS_COUNT = 3;
+	private static final int DICES_COUNT = 4;
+	private static final int COLUMNS_COUNT = 12;
+	private static final int SCORE_MAX = 3;
 	private static final int COMBINATION_OR = 0;
 	private static final int COMBINATION_AND = 1;
 
@@ -30,9 +36,11 @@ public class GameEngine {
 		System.out.println("");
 		ge.printCombinations();
 
+		System.out.println("");
 		ge.printPlayer(0);
 		ge.save(0);
 		// ge.updatePawns();
+		System.out.println("");
 		ge.printPlayer(0);
 	}
 
@@ -46,29 +54,29 @@ public class GameEngine {
 		this.players = new ArrayList<Map<Integer, Integer>>();
 		for (int i = 0; i < nPlayers; i++) {
 			Map<Integer, Integer> tmp = new HashMap<Integer, Integer>();
-			for (int j = 2; j <= 12; j++) {
+			for (int j = 2; j <= COLUMNS_COUNT; j++) {
 				tmp.put(j, 0);
 			}
 			players.add(tmp);
 		}
 
-		this.dices = new int[4];
+		this.dices = new int[DICES_COUNT];
 
-		this.combinatons = new int[3][3];
+		this.combinatons = new int[COMBINATIONS_COUNT][COMBINATIONS_PARTS_COUNT];
 		for (int i = 0; i < 3; i++) {
-			this.combinatons[i][0] = -1;
-			this.combinatons[i][1] = -1;
-			this.combinatons[i][2] = -1;
+			this.combinatons[i][0] = NULL_COMBINATION;
+			this.combinatons[i][1] = NULL_COMBINATION;
+			this.combinatons[i][2] = NULL_COMBINATION;
 		}
 
 		this.colFinished = new ArrayList<Integer>();
 
 		// bouchon
-		// pawns.put(2, 5);
-		// pawns.put(10, 5);
-		pawns.put(12, 5);
-		addLevel(0, 2);
-		addLevel(0, 2);
+		pawns.put(7, 5);
+		pawns.put(6, 5);
+		// addLevel(0, 2);
+		// addLevel(0, 2);
+		colFinished.add(5);
 	}
 
 	public void printDices() {
@@ -107,13 +115,23 @@ public class GameEngine {
 		System.out.println("");
 	}
 
+	public boolean isWinner(int playerId) {
+		return scores[playerId] == SCORE_MAX;
+	}
+
+	public void nextPlayer() {
+		token = token == 0 ? 1 : 0;
+	}
+
 	public void combineDices() {
 		int pawnsLeft = 3 - pawns.size();
 
 		int a1 = dices[0] + dices[1];
-		combinatons[0][0] = pawns.containsKey(a1) || pawnsLeft > 0 ? a1 : -1;
+		combinatons[0][0] = (pawns.containsKey(a1) || pawnsLeft > 0) && !colFinished.contains(a1) ? a1
+				: NULL_COMBINATION;
 		int a2 = dices[2] + dices[3];
-		combinatons[0][1] = pawns.containsKey(a2) || pawnsLeft > 0 ? a2 : -1;
+		combinatons[0][1] = (pawns.containsKey(a2) || pawnsLeft > 0) && !colFinished.contains(a2) ? a2
+				: NULL_COMBINATION;
 		if (pawnsLeft == 2 || (pawns.containsKey(a1) && pawns.containsKey(a2))
 				|| (pawnsLeft == 1 && pawns.containsKey(a1)) || (pawnsLeft == 1 && pawns.containsKey(a2))) {
 			combinatons[0][2] = COMBINATION_AND;
@@ -122,9 +140,11 @@ public class GameEngine {
 		}
 
 		int b1 = dices[1] + dices[2];
-		combinatons[1][0] = pawns.containsKey(b1) || pawnsLeft > 0 ? b1 : -1;
+		combinatons[1][0] = (pawns.containsKey(b1) || pawnsLeft > 0) && !colFinished.contains(b1) ? b1
+				: NULL_COMBINATION;
 		int b2 = dices[3] + dices[0];
-		combinatons[1][1] = pawns.containsKey(b2) || pawnsLeft > 0 ? b2 : -1;
+		combinatons[1][1] = (pawns.containsKey(b2) || pawnsLeft > 0) && !colFinished.contains(b2) ? b2
+				: NULL_COMBINATION;
 		if (pawnsLeft == 2 || (pawns.containsKey(b1) && pawns.containsKey(b2))
 				|| (pawnsLeft == 1 && pawns.containsKey(b1)) || (pawnsLeft == 1 && pawns.containsKey(b2))) {
 			combinatons[1][2] = COMBINATION_AND;
@@ -133,9 +153,11 @@ public class GameEngine {
 		}
 
 		int c1 = dices[0] + dices[2];
-		combinatons[2][0] = pawns.containsKey(c1) || pawnsLeft > 0 ? c1 : -1;
+		combinatons[2][0] = (pawns.containsKey(c1) || pawnsLeft > 0) && !colFinished.contains(c1) ? c1
+				: NULL_COMBINATION;
 		int c2 = dices[1] + dices[3];
-		combinatons[2][1] = pawns.containsKey(c2) || pawnsLeft > 0 ? c2 : -1;
+		combinatons[2][1] = (pawns.containsKey(c2) || pawnsLeft > 0) && !colFinished.contains(c2) ? c2
+				: NULL_COMBINATION;
 		if (pawnsLeft == 2 || (pawns.containsKey(c1) && pawns.containsKey(c2))
 				|| (pawnsLeft == 1 && pawns.containsKey(c1)) || (pawnsLeft == 1 && pawns.containsKey(c2))) {
 			combinatons[2][2] = COMBINATION_AND;
@@ -154,7 +176,7 @@ public class GameEngine {
 
 	public boolean canContinu() {
 		for (int i = 0; i < 3; i++) {
-			if (combinatons[i][0] != -1 || combinatons[i][1] != -1) {
+			if (combinatons[i][0] != NULL_COMBINATION || combinatons[i][1] != NULL_COMBINATION) {
 				return true;
 			}
 		}
@@ -243,7 +265,17 @@ public class GameEngine {
 		updatePawns();
 	}
 
-	public void addLevel(int playerId, int column) {
+	public void executeCombination(String combination) {
+		if (combination.contains(" et ")) {
+			String tmp[] = combination.split(" et ");
+			addLevel(token, Integer.valueOf(tmp[0]));
+			addLevel(token, Integer.valueOf(tmp[1]));
+		} else {
+			addLevel(token, Integer.valueOf(combination));
+		}
+	}
+
+	private void addLevel(int playerId, int column) {
 		int tmp = 0;
 		if (pawns.containsKey(column)) {
 			tmp = pawns.get(column) + 1;
