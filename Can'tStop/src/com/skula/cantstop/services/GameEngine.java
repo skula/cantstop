@@ -26,24 +26,6 @@ public class GameEngine {
 	private List<Map<Integer, Integer>> players;
 	private List<Integer> colFinished;
 
-	public static void main(String arg[]) {
-		GameEngine ge = new GameEngine(2);
-		ge.rollTheDice();
-		ge.combineDices();
-		ge.printDices();
-		System.out.println("");
-		ge.printPawns();
-		System.out.println("");
-		ge.printCombinations();
-
-		System.out.println("");
-		ge.printPlayer(0);
-		ge.save(0);
-		// ge.updatePawns();
-		System.out.println("");
-		ge.printPlayer(0);
-	}
-
 	public GameEngine(int nPlayers) {
 		this.nPlayers = nPlayers;
 		this.scores = new int[nPlayers];
@@ -77,42 +59,6 @@ public class GameEngine {
 		// addLevel(0, 2);
 		// addLevel(0, 2);
 		colFinished.add(5);
-	}
-
-	public void printDices() {
-		System.out.println("Dés: ");
-		for (int i = 0; i < 4; i++) {
-			System.out.print(dices[i]);
-			if (i != 3) {
-				System.out.print(", ");
-			}
-		}
-		System.out.println("");
-	}
-
-	public void printPawns() {
-		System.out.println("Bonzes: ");
-		for (Integer key : pawns.keySet()) {
-			System.out.print(key + " ");
-		}
-		System.out.println("");
-	}
-
-	public void printCombinations() {
-		System.out.println("Combinaisons: ");
-		for (int i = 0; i < 3; i++) {
-			String tmp = combinatons[i][2] == COMBINATION_AND ? " et " : " ou ";
-			System.out.print(combinatons[i][0] + tmp + combinatons[i][1]);
-			System.out.println("");
-		}
-	}
-
-	public void printPlayer(int id) {
-		System.out.println("Player " + id + ": ");
-		for (Integer key : players.get(id).keySet()) {
-			System.out.print(key + ": " + players.get(id).get(key) + ", ");
-		}
-		System.out.println("");
 	}
 
 	public boolean isWinner(int playerId) {

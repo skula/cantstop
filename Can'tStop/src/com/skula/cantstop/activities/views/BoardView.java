@@ -7,12 +7,20 @@ import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.skula.cantstop.services.Drawer;
+import com.skula.cantstop.services.GameEngine;
+
 public class BoardView extends View {
 	private Paint paint;
 	private Resources res;
+	private Drawer drawer;
+	private GameEngine engine;
 
 	public BoardView(Context context) {
 		super(context);
+		this.engine = new GameEngine(2);
+		this.drawer = new Drawer(getResources(), engine);
+		this.paint = new Paint();
 	}
 
 	@Override
@@ -34,6 +42,6 @@ public class BoardView extends View {
 
 	@Override
 	public void draw(Canvas canvas) {
-
+		drawer.draw(canvas);
 	}
 }
