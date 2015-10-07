@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.skula.cantstop.R;
 import com.skula.cantstop.cnst.PictureLibrary;
 
 public class Drawer {
@@ -17,6 +18,8 @@ public class Drawer {
 	private static final int DX = 70;
 	private static final int DY = 70;
 	private static final int PAWN_SIZE = 50;
+	private static final int DICE_SIZE = 50;
+	private static final Rect DICE_RECT = new Rect(0, 0, DICE_SIZE, DICE_SIZE);
 	private PictureLibrary lib;
 	private Paint paint;
 	private GameEngine engine;
@@ -36,6 +39,62 @@ public class Drawer {
 		drawColumns(c);
 		drawPawns(c);
 		// drawPlayersPositions(c);
+		 drawChoices(c);
+	}
+	
+	private void drawChoices(Canvas c){
+		int x = 20;
+		int y = 900;
+		int dx1 = 10;
+		int dx2 = 30;
+		int dx3 = 50;
+		
+		int dices[] = engine.getDices();
+		// dés 0-1,2-3
+		c.drawBitmap(lib.get(getDiceDrawable(dices[0])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx1;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[1])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx2;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[2])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx1;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[3])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		// dés 1-2,3-0
+		x+= DICE_SIZE + dx3;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[1])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx1;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[2])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx2;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[3])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx1;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[0])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		// dés 0-2,1-3
+		x+= DICE_SIZE + dx3;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[0])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx1;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[2])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx2;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[1])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+		x+= DICE_SIZE + dx1;
+		c.drawBitmap(lib.get(getDiceDrawable(dices[3])), DICE_RECT, new Rect(x, y, x + DICE_SIZE, y + DICE_SIZE), paint);
+	}
+	
+	private int getDiceDrawable(int i){
+		switch(i){
+		case 1:
+			return R.drawable.dice_1;
+		case 2:
+			return R.drawable.dice_2;
+		case 3:
+			return R.drawable.dice_3;
+		case 4:
+			return R.drawable.dice_4;
+		case 5:
+			return R.drawable.dice_5;
+		case 6:
+			return R.drawable.dice_6;
+		default:
+			return -1;
+		}
 	}
 
 	private void drawColumns(Canvas c) {

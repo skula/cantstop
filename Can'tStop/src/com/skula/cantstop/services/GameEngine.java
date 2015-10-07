@@ -43,6 +43,7 @@ public class GameEngine {
 		}
 
 		this.dices = new int[DICES_COUNT];
+		rollTheDice();
 
 		this.combinatons = new int[COMBINATIONS_COUNT][COMBINATIONS_PARTS_COUNT];
 		for (int i = 0; i < 3; i++) {
